@@ -20,7 +20,8 @@ func main() {
 
 	reader := bufio.NewReader(os.Stdin)
 
-	var running []string
+	var running_port []string
+	var running_https []bool
 
 	for {
 		fmt.Print(">> ")
@@ -42,11 +43,17 @@ func main() {
 			}
 			// i somehow need a handle to this 
 			go runServer(https, port)
-			running = append(running, port)
+			running_port = append(running_port, port)
+			running_https = append(running_https, https)
 
 		case "running":
-			for _, port := range running {
-				fmt.Println(port)
+			for i, port := range running_port {
+				fmt.Print(port)
+				if (running_https[i]) {
+					fmt.Println(" https")
+				} else {
+					fmt.Println(" http")
+				}
 			}
 
 		case "exit":
@@ -164,18 +171,14 @@ func runServer(https bool, port string) {
 
 	var err error
 
-	fmt.Println("Listening...")
-
 	if (https) {
-		fmt.Println("running https server on port " + port)
 		err = http.ListenAndServeTLS(":" + port, "https-server.crt", "https-server.key", server);
 	} else {
-		fmt.Println("running http server on port " + port)
 		err = http.ListenAndServe(":" + port, server)
 	}
 
 	if (err != nil) {
-		fmt.Println("Error starting server")
+		fmt.Println("ERROR STARTING SERVER")
 	}
 
 
