@@ -41,14 +41,14 @@ func main() {
 			if (er != nil) {
 				continue 
 			}
-			// i somehow need a handle to this 
+
 			go runServer(https, port)
 			running_port = append(running_port, port)
 			running_https = append(running_https, https)
 
 		case "running":
 			for i, port := range running_port {
-				fmt.Print(port)
+				fmt.Print("\t" + port)
 				if (running_https[i]) {
 					fmt.Println(" https")
 				} else {
